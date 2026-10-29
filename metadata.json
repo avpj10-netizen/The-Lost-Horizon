@@ -1,0 +1,6 @@
+{
+  "name": "The Lost Horizon — Karnataka Coastal & Heritage Explorer",
+  "description": "Ultra-premium travel curator and AI journey planner for Karnataka's dual wonders: the coastal cliffs of Gokarna and the sand-buried temples of Talakadu.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
