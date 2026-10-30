@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { AppProvider, useApp } from './context/AppContext';
 import { DynamicIsland } from './components/DynamicIsland';
 import { KarnatakaSatelliteMap } from './components/KarnatakaSatelliteMap';
 import { DestinationShowcase } from './components/DestinationShowcase';
@@ -10,12 +11,13 @@ import { MapsGroundingModal } from './components/MapsGroundingModal';
 import { ScrollReveal } from './components/ScrollReveal';
 import { CircuitType, UserSession, GeneratedItinerary, PackingItem } from './types';
 import { DEFAULT_PACKING_ITEMS } from './data/packingChecklist';
-import { Compass, Waves, Landmark, Sparkles, ArrowDown, MapPin, Navigation, ArrowRight } from 'lucide-react';
+import { Compass, Waves, Landmark, Sparkles, ArrowDown, MapPin, Navigation, ArrowRight, Sun, Moon, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-const SESSION_STORAGE_KEY = 'the_lost_horizon_session_v2';
+const SESSION_STORAGE_KEY = 'the_lost_horizon_session_v4';
 
-export default function App() {
+const MainAppContent: React.FC = () => {
+  const { t, theme } = useApp();
   const [currentCircuit, setCurrentCircuit] = useState<CircuitType>('all');
   const [activeSection, setActiveSection] = useState<string>('hero');
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
@@ -107,13 +109,11 @@ export default function App() {
 
   const handleToggleWishlistHotel = (hotelId: string) => {
     setSession((prev) => {
-      const list = prev.wishlistHotels || [];
-      const nextList = list.includes(hotelId)
-        ? list.filter((id) => id !== hotelId)
-        : [...list, hotelId];
+      const current = prev.wishlistHotels || [];
+      const exists = current.includes(hotelId);
       return {
         ...prev,
-        wishlistHotels: nextList,
+        wishlistHotels: exists ? current.filter((id) => id !== hotelId) : [...current, hotelId],
       };
     });
   };
@@ -125,27 +125,23 @@ export default function App() {
     }));
   };
 
-  const handleExploreLocationFromMap = (locationId: string) => {
-    setSelectedLocationId(locationId);
-    navigateToSection('destinations');
-  };
-
-  const handleOpenMapsIntel = (locationName: string = 'Om Beach Gokarna') => {
-    setMapsModalTarget(locationName);
+  const handleOpenMapsIntel = (location: string) => {
+    setMapsModalTarget(location);
     setIsMapsModalOpen(true);
   };
 
-  // High-resolution photography of Gokarna and Talakadu for the background
-  const heroBackgroundUrl =
-    currentCircuit === 'talakadu'
-      ? 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2400&q=85'
-      : currentCircuit === 'gokarna'
-      ? 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2400&q=85'
-      : 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?auto=format&fit=crop&w=2400&q=85';
+  // Background image toggle for hero based on selected circuit
+  const heroBackgrounds = {
+    all: 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?auto=format&fit=crop&w=2000&q=80',
+    gokarna: 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?auto=format&fit=crop&w=2000&q=80',
+    talakadu: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=2000&q=80',
+    combined: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2000&q=80',
+  };
 
   return (
-    <div className="relative min-h-screen bg-[#070b14] text-slate-100 selection:bg-sky-500/30 selection:text-sky-200 antialiased overflow-x-hidden">
-      {/* Native iOS Style Dynamic Island Floating Header */}
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-slate-900 selection:text-white dark:selection:bg-white dark:selection:text-slate-900 transition-colors">
+      
+      {/* Top Floating Dynamic Navigation Island */}
       <DynamicIsland
         currentCircuit={currentCircuit}
         onSelectCircuit={setCurrentCircuit}
@@ -161,276 +157,264 @@ export default function App() {
           setIsAuthModalOpen(true);
         }}
         onSignOut={handleSignOut}
-        onOpenMapsIntel={() => handleOpenMapsIntel('Karnataka Dual Corridor')}
+        onOpenMapsIntel={() => handleOpenMapsIntel('Om Beach Gokarna')}
       />
 
-      {/* Main Content Area */}
-      <main className="relative pt-20 sm:pt-24 pb-20 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16 sm:space-y-28">
-        
-        {/* ========================================================
-            HERO SECTION: Pure Editorial Aesthetics & Dynamic Background
-           ======================================================== */}
-        <ScrollReveal className="w-full">
-          <section
-            id="hero"
-            className="relative pt-6 sm:pt-12 pb-8 sm:pb-12 text-center space-y-6 sm:space-y-8 rounded-3xl overflow-hidden border border-white/15 bg-slate-950/85 shadow-2xl"
-          >
-            {/* Authentic Photographic Destination Background of Gokarna and Talakadu */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-              <AnimatePresence mode="wait">
-                <motion.img
-                  key={heroBackgroundUrl}
-                  src={heroBackgroundUrl}
-                  alt="Karnataka Heritage Landscape"
-                  initial={{ opacity: 0, scale: 1.04 }}
-                  animate={{ opacity: 0.42, scale: 1.0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.9, ease: 'easeOut' }}
-                  className="w-full h-full object-cover object-center filter brightness-[0.7] contrast-[1.05] saturate-[1.1]"
-                />
-              </AnimatePresence>
-              {/* Soft Vignette and Gradient Overlay for Text Readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#070b14] via-[#070b14]/80 to-[#070b14]/60" />
-              <div className="absolute inset-0 bg-radial from-transparent via-[#070b14]/50 to-[#070b14]" />
+      {/* ========================================================
+          HERO CINEMATIC SECTION
+         ======================================================== */}
+      <section
+        id="hero"
+        className="relative min-h-[92vh] sm:min-h-screen flex items-center justify-center pt-24 pb-16 px-4 overflow-hidden"
+      >
+        {/* Dynamic Background Image with Smooth Crossfade */}
+        <div className="absolute inset-0 z-0">
+          <img
+            key={currentCircuit}
+            src={heroBackgrounds[currentCircuit] || heroBackgrounds.all}
+            alt="Karnataka Heritage"
+            className="w-full h-full object-cover transition-opacity duration-1000 animate-in fade-in"
+          />
+          {/* Light & Dark Adaptive Gradient Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-50/85 via-slate-50/75 to-slate-50 dark:from-slate-950/85 dark:via-slate-950/75 dark:to-slate-950 transition-colors" />
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center">
+          
+          <ScrollReveal direction="down" delay={0.1}>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-slate-300 dark:border-white/20 bg-white/80 dark:bg-black/40 backdrop-blur-md text-xs font-mono uppercase tracking-widest text-slate-700 dark:text-zinc-200 mb-6 shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-900 dark:bg-white animate-pulse" />
+              <span>{t.hero.badge}</span>
             </div>
+          </ScrollReveal>
 
-            {/* Top Regional Switcher Bar */}
-            <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-8">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-sky-400/30 bg-slate-900/90 backdrop-blur-xl text-xs font-medium text-white shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
-                <span>
-                  {currentCircuit === 'gokarna'
-                    ? 'Gokarna Coastline • Arabian Sea Cliffs'
-                    : currentCircuit === 'talakadu'
-                    ? 'Talakadu River Dunes • Kaveri Basin'
-                    : 'Karnataka Dual Heritage Corridor • 518 km'}
-                </span>
-              </div>
+          <ScrollReveal direction="up" delay={0.15}>
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif font-bold tracking-tight text-slate-950 dark:text-white leading-[1.08] mb-6">
+              {t.hero.titleLine1}
+              <span className="block text-2xl sm:text-4xl md:text-5xl font-light text-slate-700 dark:text-zinc-300 mt-2">
+                {t.hero.titleLine2}
+              </span>
+            </h1>
+          </ScrollReveal>
 
-              {/* Quick Destination Switcher Pills */}
-              <div className="inline-flex items-center gap-1 p-1 rounded-2xl bg-black/60 border border-white/15 backdrop-blur-md text-xs font-medium text-zinc-300">
-                <button
-                  onClick={() => setCurrentCircuit('all')}
-                  className={`px-3 py-1.5 rounded-xl transition-all active:scale-95 ${
-                    currentCircuit === 'all'
-                      ? 'bg-white text-slate-900 font-semibold shadow-sm'
-                      : 'hover:text-white'
-                  }`}
-                >
-                  Dual View
-                </button>
-                <button
-                  onClick={() => setCurrentCircuit('gokarna')}
-                  className={`px-3 py-1.5 rounded-xl transition-all active:scale-95 flex items-center gap-1.5 ${
-                    currentCircuit === 'gokarna'
-                      ? 'bg-sky-500 text-white font-semibold shadow-sm'
-                      : 'hover:text-sky-300'
-                  }`}
-                >
-                  <Waves className="w-3.5 h-3.5" />
-                  <span>Gokarna Coast</span>
-                </button>
-                <button
-                  onClick={() => setCurrentCircuit('talakadu')}
-                  className={`px-3 py-1.5 rounded-xl transition-all active:scale-95 flex items-center gap-1.5 ${
-                    currentCircuit === 'talakadu'
-                      ? 'bg-sky-500 text-white font-semibold shadow-sm'
-                      : 'hover:text-sky-300'
-                  }`}
-                >
-                  <Landmark className="w-3.5 h-3.5" />
-                  <span>Talakadu Dunes</span>
-                </button>
-              </div>
-            </div>
+          <ScrollReveal direction="up" delay={0.2}>
+            <p className="max-w-2xl text-base sm:text-lg text-slate-700 dark:text-zinc-300 leading-relaxed mb-10">
+              {t.hero.subtitle}
+            </p>
+          </ScrollReveal>
 
-            {/* Master Title & Editorial Copy */}
-            <div className="relative z-10 px-4 sm:px-8 space-y-3 pt-1">
-              <h1 className="text-3xl sm:text-5xl lg:text-7xl font-serif font-black tracking-tight text-white max-w-4xl mx-auto leading-[1.1]">
-                The Lost Horizon
-              </h1>
-
-              <p className="text-xs sm:text-base text-zinc-200 max-w-2xl mx-auto font-normal leading-relaxed">
-                Where the secluded rocky cliffs and sacred Shiva temples of <strong className="text-sky-300 font-semibold">Gokarna</strong> converge with the sand-buried shrines and tranquil Kaveri coracles of <strong className="text-sky-300 font-semibold">Talakadu</strong>.
-              </p>
-            </div>
-
-            {/* ========================================================
-                STARTING DUAL CIRCUIT CARDS
-                Same Unified White & iOS Blue Color Palette for Both
-               ======================================================== */}
-            <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto px-4 text-left pt-2">
-              {/* Western Seaboard (Gokarna) */}
-              <div
+          {/* Quick Action Navigation Buttons */}
+          <ScrollReveal direction="up" delay={0.25}>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <button
                 onClick={() => {
                   setCurrentCircuit('gokarna');
                   navigateToSection('destinations');
                 }}
-                className="p-5 rounded-2xl border border-white/15 bg-slate-900/80 backdrop-blur-xl hover:border-sky-400/50 hover:bg-slate-900/95 transition-all duration-300 cursor-pointer group shadow-xl active:scale-[0.98]"
+                className="flex items-center gap-2 px-6 py-3 rounded-full bg-slate-950 text-white dark:bg-white dark:text-slate-950 font-semibold text-xs sm:text-sm hover:opacity-90 active:scale-95 transition-all shadow-md"
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-sky-300 font-semibold uppercase tracking-wider flex items-center gap-1.5">
-                    <Waves className="w-3.5 h-3.5 text-sky-400" />
-                    Western Seaboard
-                  </span>
-                  <span className="text-xs text-zinc-400 font-sans">Uttara Kannada</span>
-                </div>
-                <h3 className="text-xl font-serif font-bold text-white mt-2 group-hover:text-sky-300 transition-colors">
-                  Gokarna Cliffs & Coves
-                </h3>
-                <p className="text-xs text-zinc-300 mt-1.5 leading-relaxed">
-                  Om Beach, Kudle crescent sands, the 4th-century Mahabaleshwar Atmalinga, and wild cliff trail scrambles.
-                </p>
-                <div className="mt-3 text-xs font-semibold text-sky-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  Explore Gokarna Highlights →
-                </div>
-              </div>
+                <Waves className="w-4 h-4" />
+                <span>{t.hero.exploreGokarna}</span>
+                <ArrowRight className="w-4 h-4 ml-1" />
+              </button>
 
-              {/* Southern Kaveri Basin (Talakadu) - Matching White & Blue Styling */}
-              <div
+              <button
                 onClick={() => {
                   setCurrentCircuit('talakadu');
                   navigateToSection('destinations');
                 }}
-                className="p-5 rounded-2xl border border-white/15 bg-slate-900/80 backdrop-blur-xl hover:border-sky-400/50 hover:bg-slate-900/95 transition-all duration-300 cursor-pointer group shadow-xl active:scale-[0.98]"
+                className="flex items-center gap-2 px-6 py-3 rounded-full border border-slate-300 dark:border-white/20 bg-white/80 dark:bg-black/40 text-slate-900 dark:text-white font-semibold text-xs sm:text-sm hover:bg-slate-100 dark:hover:bg-white/10 active:scale-95 transition-all shadow-sm backdrop-blur-md"
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-sky-300 font-semibold uppercase tracking-wider flex items-center gap-1.5">
-                    <Landmark className="w-3.5 h-3.5 text-sky-400" />
-                    Southern Kaveri Basin
-                  </span>
-                  <span className="text-xs text-zinc-400 font-sans">Mysuru Valley</span>
+                <Landmark className="w-4 h-4" />
+                <span>{t.hero.exploreTalakadu}</span>
+              </button>
+
+              <button
+                onClick={() => navigateToSection('map')}
+                className="flex items-center gap-2 px-5 py-3 rounded-full border border-slate-300 dark:border-white/20 bg-slate-200/80 dark:bg-slate-800/80 text-slate-800 dark:text-zinc-200 font-semibold text-xs sm:text-sm hover:bg-slate-300 dark:hover:bg-slate-700 active:scale-95 transition-all shadow-sm"
+              >
+                <MapPin className="w-4 h-4" />
+                <span>{t.hero.interactiveMap}</span>
+              </button>
+            </div>
+          </ScrollReveal>
+
+          {/* Stats Ribbon */}
+          <ScrollReveal direction="up" delay={0.3} className="w-full mt-14">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 border-t border-slate-200 dark:border-white/15 text-left">
+              <div className="p-4 rounded-2xl bg-white/70 dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 backdrop-blur-md shadow-sm">
+                <div className="text-xl font-bold font-serif text-slate-950 dark:text-white">
+                  {t.hero.statsCircuits}
                 </div>
-                <h3 className="text-xl font-serif font-bold text-white mt-2 group-hover:text-sky-300 transition-colors">
-                  Talakadu Sand & Sanctums
-                </h3>
-                <p className="text-xs text-zinc-300 mt-1.5 leading-relaxed">
-                  Panchalinga shrines buried under inland river sand dunes, circular Kaveri coracles, and ancient Hoysala masterworks.
-                </p>
-                <div className="mt-3 text-xs font-semibold text-sky-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  Explore Talakadu Highlights →
+                <div className="text-xs text-slate-600 dark:text-zinc-400 mt-1">
+                  {t.hero.statsCircuitsDesc}
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white/70 dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 backdrop-blur-md shadow-sm">
+                <div className="text-xl font-bold font-serif text-slate-950 dark:text-white">
+                  {t.hero.statsDistance}
+                </div>
+                <div className="text-xs text-slate-600 dark:text-zinc-400 mt-1">
+                  {t.hero.statsDistanceDesc}
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white/70 dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 backdrop-blur-md shadow-sm">
+                <div className="text-xl font-bold font-serif text-slate-950 dark:text-white">
+                  {t.hero.statsHeritage}
+                </div>
+                <div className="text-xs text-slate-600 dark:text-zinc-400 mt-1">
+                  {t.hero.statsHeritageDesc}
                 </div>
               </div>
             </div>
+          </ScrollReveal>
 
-            {/* Quick Action Anchor */}
-            <div className="relative z-10 pt-2 pb-1 flex justify-center">
-              <button
-                onClick={() => navigateToSection('map')}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 backdrop-blur-md text-xs font-medium text-white transition-all shadow-md active:scale-95"
-              >
-                <span>View Official Karnataka District Map</span>
-                <ArrowDown className="w-3.5 h-3.5 animate-bounce text-sky-400" />
-              </button>
-            </div>
-          </section>
-        </ScrollReveal>
-
-        {/* ========================================================
-            SECTION 2: OFFICIAL KARNATAKA DISTRICT MAP & BACKGROUND
-           ======================================================== */}
-        <ScrollReveal className="w-full" delay={0.05}>
-          <section id="map" className="scroll-mt-24 sm:scroll-mt-32">
-            <KarnatakaSatelliteMap
-              currentCircuit={currentCircuit}
-              onSelectCircuit={setCurrentCircuit}
-              onExploreLocation={handleExploreLocationFromMap}
-              onOpenMapsIntel={handleOpenMapsIntel}
-            />
-          </section>
-        </ScrollReveal>
-
-        {/* ========================================================
-            SECTION 3: DESTINATION SHOWCASE DEEP-DIVE
-           ======================================================== */}
-        <ScrollReveal className="w-full" delay={0.05}>
-          <section id="destinations" className="scroll-mt-24 sm:scroll-mt-32">
-            <DestinationShowcase
-              currentCircuit={currentCircuit}
-              onSelectCircuit={setCurrentCircuit}
-              selectedLocationId={selectedLocationId}
-              onSelectLocation={setSelectedLocationId}
-              onOpenMapsIntel={handleOpenMapsIntel}
-            />
-          </section>
-        </ScrollReveal>
-
-        {/* ========================================================
-            SECTION 4: BESPOKE ITINERARY PLANNER
-           ======================================================== */}
-        <ScrollReveal className="w-full" delay={0.05}>
-          <section id="itinerary" className="scroll-mt-24 sm:scroll-mt-32">
-            <ItineraryGenerator
-              currentCircuit={currentCircuit}
-              onSaveItinerary={handleSaveItinerary}
-              savedItineraries={session.savedItineraries || []}
-              onOpenMapsIntel={handleOpenMapsIntel}
-            />
-          </section>
-        </ScrollReveal>
-
-        {/* ========================================================
-            SECTION 5: REAL-TIME BUDGET ESTIMATOR & HOTEL SUGGESTER
-           ======================================================== */}
-        <ScrollReveal className="w-full" delay={0.05}>
-          <section id="budget" className="scroll-mt-24 sm:scroll-mt-32">
-            <BudgetEstimator
-              currentCircuit={currentCircuit}
-              wishlistHotels={session.wishlistHotels || []}
-              onToggleWishlistHotel={handleToggleWishlistHotel}
-              onOpenMapsIntel={handleOpenMapsIntel}
-            />
-          </section>
-        </ScrollReveal>
-
-        {/* ========================================================
-            SECTION 6: SUPPORTING ACTION PODS & FIELD TOOLS
-           ======================================================== */}
-        <ScrollReveal className="w-full" delay={0.05}>
-          <section id="action-pods" className="scroll-mt-24 sm:scroll-mt-32">
-            <ActionPods
-              currentCircuit={currentCircuit}
-              customPackingItems={session.customPackingItems || DEFAULT_PACKING_ITEMS}
-              onUpdatePackingItems={handleUpdatePackingItems}
-              onExploreCircuit={(circuit) => {
-                setCurrentCircuit(circuit);
-                navigateToSection('destinations');
-              }}
-            />
-          </section>
-        </ScrollReveal>
-      </main>
-
-      {/* Elegant Editorial Footer */}
-      <footer className="border-t border-white/10 bg-slate-950/90 py-12 px-4 sm:px-6 text-center text-xs text-zinc-400 space-y-3">
-        <div className="flex items-center justify-center gap-2 text-white font-serif font-bold text-sm">
-          <Compass className="w-4 h-4 text-sky-400" />
-          <span>The Lost Horizon • Karnataka Coastal & Heritage Explorer</span>
         </div>
-        <p className="max-w-md mx-auto text-zinc-400 leading-relaxed">
-          Crafted with Apple iOS spring micro-interactions, official Karnataka district cartography, and curated travel intelligence.
-        </p>
-        <p className="text-zinc-500">© 2026 The Lost Horizon. Celebrating the sacred heritage of Gokarna & Talakadu.</p>
+      </section>
+
+      {/* ========================================================
+          DESTINATIONS SHOWCASE SECTION
+         ======================================================== */}
+      <section id="destinations" className="max-w-6xl mx-auto px-4 py-16">
+        <ScrollReveal direction="up">
+          <DestinationShowcase
+            currentCircuit={currentCircuit}
+            onSelectCircuit={setCurrentCircuit}
+            selectedLocationId={selectedLocationId}
+            onSelectLocation={(locId) => setSelectedLocationId(locId)}
+            onOpenMapsIntel={handleOpenMapsIntel}
+          />
+        </ScrollReveal>
+      </section>
+
+      {/* ========================================================
+          KARNATAKA DISTRICT MAP SECTION
+         ======================================================== */}
+      <section id="map" className="max-w-7xl mx-auto px-2 sm:px-4 py-16 border-t border-slate-200 dark:border-slate-800">
+        <ScrollReveal direction="up">
+          <KarnatakaSatelliteMap
+            currentCircuit={currentCircuit}
+            onSelectCircuit={setCurrentCircuit}
+            onExploreLocation={(locId) => setSelectedLocationId(locId)}
+            onOpenMapsIntel={handleOpenMapsIntel}
+          />
+        </ScrollReveal>
+      </section>
+
+      {/* ========================================================
+          ITINERARY GENERATOR SECTION
+         ======================================================== */}
+      <section id="itinerary" className="max-w-6xl mx-auto px-4 py-16 border-t border-slate-200 dark:border-slate-800">
+        <ScrollReveal direction="up">
+          <ItineraryGenerator
+            currentCircuit={currentCircuit}
+            onSaveItinerary={handleSaveItinerary}
+            savedItineraries={session.savedItineraries || []}
+            onOpenMapsIntel={handleOpenMapsIntel}
+          />
+        </ScrollReveal>
+      </section>
+
+      {/* ========================================================
+          BUDGET & HOTEL ESTIMATOR SECTION
+         ======================================================== */}
+      <section id="budget" className="max-w-6xl mx-auto px-4 py-16 border-t border-slate-200 dark:border-slate-800">
+        <ScrollReveal direction="up">
+          <BudgetEstimator
+            currentCircuit={currentCircuit}
+            wishlistHotels={session.wishlistHotels || []}
+            onToggleWishlistHotel={handleToggleWishlistHotel}
+            onOpenMapsIntel={handleOpenMapsIntel}
+          />
+        </ScrollReveal>
+      </section>
+
+      {/* ========================================================
+          ACTION PODS: PHRASEBOOK, PACKING & QUIZ
+         ======================================================== */}
+      <section id="pods" className="max-w-6xl mx-auto px-4 py-16 border-t border-slate-200 dark:border-slate-800">
+        <ScrollReveal direction="up">
+          <ActionPods
+            currentCircuit={currentCircuit}
+            customPackingItems={session.customPackingItems || []}
+            onUpdatePackingItems={handleUpdatePackingItems}
+            onExploreCircuit={setCurrentCircuit}
+          />
+        </ScrollReveal>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-12 px-4 transition-colors">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+          <div className="space-y-1">
+            <div className="flex items-center justify-center md:justify-start gap-2">
+              <Compass className="w-4 h-4 text-slate-800 dark:text-zinc-200" />
+              <span className="font-serif font-bold text-sm uppercase text-slate-900 dark:text-white">
+                {t.appName}
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 dark:text-zinc-400">
+              {t.tagline}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-medium text-slate-600 dark:text-zinc-400">
+            <button onClick={() => navigateToSection('hero')} className="hover:text-slate-900 dark:hover:text-white">
+              {t.nav.overview}
+            </button>
+            <button onClick={() => navigateToSection('destinations')} className="hover:text-slate-900 dark:hover:text-white">
+              Wonders
+            </button>
+            <button onClick={() => navigateToSection('map')} className="hover:text-slate-900 dark:hover:text-white">
+              {t.nav.map}
+            </button>
+            <button onClick={() => navigateToSection('itinerary')} className="hover:text-slate-900 dark:hover:text-white">
+              Planner
+            </button>
+            <button onClick={() => navigateToSection('budget')} className="hover:text-slate-900 dark:hover:text-white">
+              Budget
+            </button>
+            <button onClick={() => navigateToSection('pods')} className="hover:text-slate-900 dark:hover:text-white">
+              Travel Pods
+            </button>
+          </div>
+
+          <div className="text-xs text-slate-400 dark:text-zinc-500 font-mono">
+            Karnataka Expedition • 2026
+          </div>
+        </div>
       </footer>
 
       {/* Auth & Saved Trips Modal */}
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
+        initialTab={authModalInitialTab}
         session={session}
         onSignIn={handleSignIn}
         onSignOut={handleSignOut}
         onDeleteItinerary={handleDeleteItinerary}
         onRemoveWishlistHotel={handleToggleWishlistHotel}
-        initialTab={authModalInitialTab}
       />
 
-      {/* Google Maps Grounding Intelligence Modal */}
+      {/* Google Maps Grounding Modal */}
       <MapsGroundingModal
         isOpen={isMapsModalOpen}
         onClose={() => setIsMapsModalOpen(false)}
         targetLocation={mapsModalTarget}
       />
+
     </div>
+  );
+};
+
+export default function App() {
+  return (
+    <AppProvider>
+      <MainAppContent />
+    </AppProvider>
   );
 }

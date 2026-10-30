@@ -54,15 +54,15 @@ export const DestinationShowcase: React.FC<DestinationShowcaseProps> = ({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full text-xs font-medium bg-white/10 text-white border border-white/15 backdrop-blur-md">
+            <span className="px-3 py-1 rounded-full text-xs font-medium bg-slate-200/80 dark:bg-white/10 text-slate-800 dark:text-white border border-slate-300 dark:border-white/15 backdrop-blur-md">
               Curated Destination Guide
             </span>
-            <span className="text-zinc-400 text-xs">• 14 Handpicked Wonders</span>
+            <span className="text-slate-500 dark:text-zinc-400 text-xs">• 14 Handpicked Wonders</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-slate-950 dark:text-white tracking-tight">
             Dual Heritage Showcase
           </h2>
-          <p className="text-sm sm:text-base text-zinc-300 max-w-2xl leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 dark:text-zinc-300 max-w-2xl leading-relaxed">
             Uncommercialized cliff trails, 4th-century Shaivite sanctuaries, subterranean karst monoliths, and sand-buried Hoysala treasures along the Kaveri river.
           </p>
         </div>
@@ -150,7 +150,7 @@ export const DestinationShowcase: React.FC<DestinationShowcaseProps> = ({
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.5, delay: (idx % 6) * 0.08, ease: [0.22, 1, 0.36, 1] }}
               onClick={() => setModalLocation(loc)}
-              className="group relative rounded-2xl border border-white/15 bg-slate-900/70 backdrop-blur-xl overflow-hidden hover:border-white/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl cursor-pointer flex flex-col justify-between"
+              className="group relative rounded-2xl border border-slate-200 dark:border-white/15 bg-white dark:bg-slate-900/70 backdrop-blur-xl overflow-hidden hover:border-slate-300 dark:hover:border-white/30 transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-2xl cursor-pointer flex flex-col justify-between"
             >
               {/* Image Container */}
               <div className="relative h-48 w-full overflow-hidden bg-slate-950">
@@ -190,13 +190,13 @@ export const DestinationShowcase: React.FC<DestinationShowcaseProps> = ({
               {/* Card Body */}
               <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
                 <div>
-                  <h3 className="text-xl font-serif font-bold text-white group-hover:text-sky-300 transition-colors">
+                  <h3 className="text-xl font-serif font-bold text-slate-950 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-300 transition-colors">
                     {loc.name}
                   </h3>
-                  <p className="text-xs font-medium text-zinc-300 mt-0.5">
+                  <p className="text-xs font-medium text-slate-600 dark:text-zinc-300 mt-0.5">
                     {loc.tagline}
                   </p>
-                  <p className="text-xs text-zinc-300 mt-2 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-slate-600 dark:text-zinc-300 mt-2 line-clamp-2 leading-relaxed">
                     {loc.description}
                   </p>
                 </div>

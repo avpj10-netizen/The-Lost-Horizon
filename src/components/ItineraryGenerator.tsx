@@ -79,22 +79,22 @@ export const ItineraryGenerator: React.FC<ItineraryGeneratorProps> = ({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 print:hidden">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-3 py-0.5 rounded-full text-[11px] font-mono uppercase tracking-widest bg-blue-500/20 text-blue-300 border border-blue-400/30">
+            <span className="px-3 py-0.5 rounded-full text-[11px] font-mono uppercase tracking-widest bg-blue-500/10 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-400/30">
               Multi-Variable AI Engine
             </span>
-            <span className="text-zinc-400 text-xs font-mono">• Day-by-Day Precision Matrix</span>
+            <span className="text-slate-500 dark:text-zinc-400 text-xs font-mono">• Day-by-Day Precision Matrix</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mt-2 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-slate-950 dark:text-white mt-2 tracking-tight">
             Personalized Journey Architect
           </h2>
-          <p className="text-sm sm:text-base text-zinc-300 max-w-2xl mt-1">
+          <p className="text-sm sm:text-base text-slate-600 dark:text-zinc-300 max-w-2xl mt-1">
             Synthesize your ideal pacing, transport timings, group dynamics, and sacred heritage checkpoints across Karnataka's contrasting realms.
           </p>
         </div>
       </div>
 
       {/* Glassmorphic Configuration Panel */}
-      <div className="rounded-3xl border border-white/15 bg-gradient-to-b from-[#0a1b38]/85 to-[#040c1e]/90 backdrop-blur-2xl p-6 sm:p-8 shadow-[0_20px_50px_rgba(2,6,23,0.7)] print:hidden">
+      <div className="rounded-3xl border border-slate-200 dark:border-white/15 bg-white dark:bg-gradient-to-b dark:from-[#0a1b38]/85 dark:to-[#040c1e]/90 backdrop-blur-2xl p-6 sm:p-8 shadow-sm dark:shadow-[0_20px_50px_rgba(2,6,23,0.7)] print:hidden">
         <form onSubmit={handleGenerate} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Variable 1: Circuit Selection */}

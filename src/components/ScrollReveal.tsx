@@ -6,6 +6,7 @@ interface ScrollRevealProps {
   delay?: number;
   className?: string;
   yOffset?: number;
+  direction?: 'up' | 'down' | 'left' | 'right' | string;
 }
 
 export const ScrollReveal: React.FC<ScrollRevealProps> = ({
@@ -13,11 +14,25 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   delay = 0,
   className = '',
   yOffset = 24,
+  direction = 'up',
 }) => {
+  let initialX = 0;
+  let initialY = yOffset;
+
+  if (direction === 'down') {
+    initialY = -yOffset;
+  } else if (direction === 'left') {
+    initialX = yOffset;
+    initialY = 0;
+  } else if (direction === 'right') {
+    initialX = -yOffset;
+    initialY = 0;
+  }
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: yOffset }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, x: initialX, y: initialY }}
+      whileInView={{ opacity: 1, x: 0, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{
         duration: 0.65,

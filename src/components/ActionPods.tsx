@@ -166,16 +166,16 @@ export const ActionPods: React.FC<ActionPodsProps> = ({
       {/* ========================================================
           POD 1: KANNADA PHRASEBOOK & AUDIO VOCALIZER
          ======================================================== */}
-      <div className="rounded-3xl border border-white/15 bg-gradient-to-b from-[#0a1a38]/85 to-[#040d22]/90 backdrop-blur-2xl p-6 sm:p-8 space-y-6 shadow-xl">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+      <div className="rounded-3xl border border-slate-200 dark:border-white/15 bg-white dark:bg-gradient-to-b dark:from-[#0a1a38]/85 dark:to-[#040d22]/90 backdrop-blur-2xl p-6 sm:p-8 space-y-6 shadow-sm dark:shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-white/10">
           <div>
             <div className="flex items-center gap-2">
-              <span className="px-3 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-widest bg-blue-500/20 text-cyan-300 border border-blue-400/30">
+              <span className="px-3 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-widest bg-blue-500/10 dark:bg-blue-500/20 text-cyan-700 dark:text-cyan-300 border border-blue-400/30">
                 Linguistic Harmony
               </span>
-              <span className="text-zinc-400 text-xs font-mono">• Native Speech Vocalizer</span>
+              <span className="text-slate-500 dark:text-zinc-400 text-xs font-mono">• Native Speech Vocalizer</span>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white mt-1">
+            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-slate-950 dark:text-white mt-1">
               Kannada Traveler’s Phrasebook
             </h3>
             <p className="text-xs sm:text-sm text-zinc-300 mt-1">
@@ -258,19 +258,19 @@ export const ActionPods: React.FC<ActionPodsProps> = ({
       {/* ========================================================
           POD 2: VIBE DIAGNOSTIC QUIZ
          ======================================================== */}
-      <div className="rounded-3xl border border-white/15 bg-gradient-to-b from-[#0a1a38]/85 to-[#040d22]/90 backdrop-blur-2xl p-6 sm:p-8 space-y-6 shadow-xl relative overflow-hidden">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+      <div className="rounded-3xl border border-slate-200 dark:border-white/15 bg-white dark:bg-gradient-to-b dark:from-[#0a1a38]/85 dark:to-[#040d22]/90 backdrop-blur-2xl p-6 sm:p-8 space-y-6 shadow-sm dark:shadow-xl relative overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-white/10">
           <div>
             <div className="flex items-center gap-2">
-              <span className="px-3 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-widest bg-amber-500/20 text-amber-300 border border-amber-400/30">
+              <span className="px-3 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-widest bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-400/30">
                 Diagnostic Match
               </span>
-              <span className="text-zinc-400 text-xs font-mono">• 3-Question Vibe Diagnostic</span>
+              <span className="text-slate-500 dark:text-zinc-400 text-xs font-mono">• 3-Question Vibe Diagnostic</span>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white mt-1">
+            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-slate-950 dark:text-white mt-1">
               Where Should You Begin Your Journey?
             </h3>
-            <p className="text-xs sm:text-sm text-zinc-300 mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-300 mt-1">
               Answer three sensory prompts to determine whether your spirit is called by the coastal cliffs of Gokarna or the sand dunes of Talakadu.
             </p>
           </div>
@@ -398,19 +398,19 @@ export const ActionPods: React.FC<ActionPodsProps> = ({
       {/* ========================================================
           POD 3: PACKING & RESPONSIBLE TRAVEL CHECKLIST
          ======================================================== */}
-      <div className="rounded-3xl border border-white/15 bg-gradient-to-b from-[#0a1a38]/85 to-[#040d22]/90 backdrop-blur-2xl p-6 sm:p-8 space-y-6 shadow-xl">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/10">
+      <div className="rounded-3xl border border-slate-200 dark:border-white/15 bg-white dark:bg-gradient-to-b dark:from-[#0a1a38]/85 dark:to-[#040d22]/90 backdrop-blur-2xl p-6 sm:p-8 space-y-6 shadow-sm dark:shadow-xl">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-white/10">
           <div>
             <div className="flex items-center gap-2">
-              <span className="px-3 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-widest bg-blue-500/20 text-cyan-300 border border-blue-400/30">
+              <span className="px-3 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-widest bg-blue-500/10 dark:bg-blue-500/20 text-cyan-700 dark:text-cyan-300 border border-blue-400/30">
                 Readiness & Sustainability
               </span>
-              <span className="text-zinc-400 text-xs font-mono">• LocalStorage Synchronized</span>
+              <span className="text-slate-500 dark:text-zinc-400 text-xs font-mono">• LocalStorage Synchronized</span>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white mt-1">
+            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-slate-950 dark:text-white mt-1">
               Field Packing & Leave-No-Trace Checklist
             </h3>
-            <p className="text-xs sm:text-sm text-zinc-300 mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-300 mt-1">
               Specific gear for rugged headland scrambles, sacred temple modesty dress codes, river coracles, and environmental preservation.
             </p>
           </div>

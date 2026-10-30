@@ -316,28 +316,28 @@ export const KarnatakaSatelliteMap: React.FC<KarnatakaSatelliteMapProps> = ({
         {/* ========================================================
             SECTION HEADER & VIEW CONTROLS
            ======================================================== */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 border-b border-white/10 pb-6">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 border-b border-slate-200 dark:border-white/10 pb-6">
           <div className="space-y-1.5">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-sky-500/20 text-sky-300 border border-sky-400/30 backdrop-blur-md">
-                <Compass className="w-3.5 h-3.5 text-sky-400" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-sky-500/10 dark:bg-sky-500/20 text-sky-700 dark:text-sky-300 border border-sky-400/30 backdrop-blur-md">
+                <Compass className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
                 Karnataka District Map & World View
               </span>
-              <span className="text-zinc-400 text-xs hidden sm:inline">
+              <span className="text-slate-500 dark:text-zinc-400 text-xs hidden sm:inline">
                 Hover over districts to scale up with subtle iOS blue glow
               </span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-950 dark:text-white tracking-tight">
               Interactive Karnataka Corridor
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-300 max-w-2xl leading-relaxed">
-              Experience the 518 km journey from the Arabian Sea cliffs of <span className="text-sky-300 font-medium">Gokarna</span> to the Kaveri river sand-dunes of <span className="text-sky-300 font-medium">Talakadu</span>.
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-300 max-w-2xl leading-relaxed">
+              Experience the 518 km journey from the Arabian Sea cliffs of <span className="text-sky-600 dark:text-sky-300 font-medium">Gokarna</span> to the Kaveri river sand-dunes of <span className="text-sky-600 dark:text-sky-300 font-medium">Talakadu</span>.
             </p>
           </div>
 
           {/* iOS View Selector Pills (World -> Karnataka -> Gokarna -> Talakadu) */}
-          <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-2xl bg-black/60 border border-white/15 backdrop-blur-xl shadow-lg self-start lg:self-auto">
+          <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-2xl bg-slate-200/80 dark:bg-black/60 border border-slate-300 dark:border-white/15 backdrop-blur-xl shadow-sm self-start lg:self-auto">
             <button
               onClick={() => handleModeChange('world')}
               className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all active:scale-95 flex items-center gap-1.5 ${
@@ -582,13 +582,48 @@ export const KarnatakaSatelliteMap: React.FC<KarnatakaSatelliteMapProps> = ({
 
                   {/* ========================================================
                       INTERACTIVE DISTRICT HOTSPOTS
-                      Scale-up on Hover with subtle blue glow transition
+                      Minimal subtle pins for other districts,
+                      Hero prominent beacons for Gokarna & Talakadu
                      ======================================================== */}
                   {ALL_DISTRICTS.map((dist) => {
+                    const isHero = dist.id === 'uttara-kannada' || dist.id === 'mysuru-talakadu';
                     const isHovered = hoveredDistrict?.id === dist.id;
                     const isSelected = selectedDistrict?.id === dist.id;
                     const isFocus = isHovered || isSelected;
 
+                    // Non-hero districts: clean minimal dots that do not clutter the map
+                    if (!isHero) {
+                      return (
+                        <div
+                          key={dist.id}
+                          className="absolute cursor-pointer z-20 group"
+                          style={{
+                            left: dist.pinLeft,
+                            top: dist.pinTop,
+                            transform: 'translate(-50%, -50%)',
+                          }}
+                          onClick={() => setSelectedDistrict(dist)}
+                          onMouseEnter={() => setHoveredDistrict(dist)}
+                          onMouseLeave={() => setHoveredDistrict(null)}
+                          title={dist.name}
+                        >
+                          <div
+                            className={`rounded-full transition-all duration-200 ${
+                              isHovered
+                                ? 'w-3 h-3 bg-zinc-900 dark:bg-zinc-100 ring-2 ring-zinc-400 scale-125'
+                                : 'w-1.5 h-1.5 bg-zinc-700/60 dark:bg-zinc-400/60'
+                            }`}
+                          />
+                          {isHovered && (
+                            <div className="absolute left-4 top-1/2 -translate-y-1/2 whitespace-nowrap px-2 py-0.5 rounded-md text-[10px] font-sans font-medium bg-zinc-900/95 text-zinc-100 border border-zinc-700 shadow-md z-40 pointer-events-none">
+                              {dist.name.split(' (')[0]}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }
+
+                    // Hero districts (Gokarna & Talakadu): Majestic beacons
                     return (
                       <div
                         key={dist.id}
@@ -611,16 +646,14 @@ export const KarnatakaSatelliteMap: React.FC<KarnatakaSatelliteMapProps> = ({
                         onMouseEnter={() => setHoveredDistrict(dist)}
                         onMouseLeave={() => setHoveredDistrict(null)}
                       >
-                        {/* Subtle Blue Glow Halo (Visible on hover/focus) */}
+                        {/* Hero Halo Ring */}
                         <div
                           className={`absolute -inset-4 rounded-full transition-all duration-300 pointer-events-none ${
-                            isFocus
-                              ? 'opacity-100 scale-125'
-                              : 'opacity-0 scale-90'
+                            isFocus ? 'opacity-100 scale-125' : 'opacity-80 scale-100'
                           }`}
                           style={{
                             boxShadow: '0 0 25px 6px rgba(56, 189, 248, 0.65), inset 0 0 12px 2px rgba(56, 189, 248, 0.4)',
-                            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, transparent 70%)',
+                            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, transparent 70%)',
                           }}
                         />
 
@@ -628,45 +661,34 @@ export const KarnatakaSatelliteMap: React.FC<KarnatakaSatelliteMapProps> = ({
                         <div
                           className={`relative rounded-full border-2 border-white shadow-xl flex items-center justify-center transition-all duration-300 ease-out active:scale-95 ${
                             isFocus
-                              ? 'w-7 h-7 bg-sky-400 scale-125 ring-4 ring-sky-400/40'
-                              : dist.id === 'uttara-kannada' || dist.id === 'mysuru-talakadu'
-                              ? 'w-5 h-5 bg-sky-500'
-                              : 'w-3.5 h-3.5 bg-sky-600/80'
+                              ? 'w-8 h-8 bg-sky-400 scale-125 ring-4 ring-sky-400/50'
+                              : 'w-6 h-6 bg-sky-500 animate-pulse'
                           }`}
                         >
                           {dist.id === 'uttara-kannada' ? (
                             <Waves className="w-3.5 h-3.5 text-white" />
-                          ) : dist.id === 'mysuru-talakadu' ? (
-                            <Landmark className="w-3.5 h-3.5 text-white" />
                           ) : (
-                            <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                            <Landmark className="w-3.5 h-3.5 text-white" />
                           )}
                         </div>
 
-                        {/* Persistent or Hover Label Badge with Blue Glow */}
+                        {/* Always-visible Hero Badge */}
                         <div
-                          className={`absolute left-7 top-1/2 -translate-y-1/2 whitespace-nowrap px-2.5 py-1 rounded-xl shadow-2xl backdrop-blur-xl border transition-all duration-300 pointer-events-none ${
+                          className={`absolute left-8 top-1/2 -translate-y-1/2 whitespace-nowrap px-3 py-1.5 rounded-xl shadow-2xl backdrop-blur-xl border transition-all duration-300 pointer-events-none z-40 ${
                             isFocus
-                              ? 'scale-110 bg-slate-900/95 border-sky-400 text-white shadow-[0_0_20px_rgba(56,189,248,0.5)] z-40'
-                              : dist.id === 'uttara-kannada' || dist.id === 'mysuru-talakadu'
-                              ? 'bg-slate-900/85 border-white/20 text-white'
-                              : 'opacity-0 group-hover:opacity-100 bg-slate-900/90 border-white/20 text-zinc-200'
+                              ? 'scale-110 bg-zinc-950 text-white border-sky-400 shadow-[0_0_20px_rgba(56,189,248,0.5)]'
+                              : 'bg-zinc-950/90 border-white/20 text-white'
                           }`}
                         >
                           <div className="flex items-center gap-1.5">
                             <span className="text-xs font-bold">{dist.name.split(' (')[0]}</span>
-                            {dist.id === 'uttara-kannada' && (
-                              <span className="text-[10px] text-sky-300 font-medium bg-sky-950/80 px-1 rounded">Gokarna</span>
-                            )}
-                            {dist.id === 'mysuru-talakadu' && (
-                              <span className="text-[10px] text-sky-300 font-medium bg-sky-950/80 px-1 rounded">Talakadu</span>
-                            )}
+                            <span className="text-[10px] text-sky-300 font-semibold bg-sky-950/80 px-1.5 py-0.5 rounded border border-sky-500/30">
+                              {dist.id === 'uttara-kannada' ? 'Gokarna' : 'Talakadu'}
+                            </span>
                           </div>
-                          {isFocus && (
-                            <div className="text-[9px] text-sky-300 font-mono">
-                              {dist.attractions.length} attractions • Click to explore
-                            </div>
-                          )}
+                          <div className="text-[9px] text-zinc-400 font-mono mt-0.5">
+                            {dist.attractions.length} attractions • Primary Focus
+                          </div>
                         </div>
                       </div>
                     );

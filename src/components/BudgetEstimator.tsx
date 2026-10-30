@@ -54,15 +54,15 @@ export const BudgetEstimator: React.FC<BudgetEstimatorProps> = ({
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-3 py-0.5 rounded-full text-[11px] font-mono uppercase tracking-widest bg-blue-500/20 text-blue-300 border border-blue-400/30">
+            <span className="px-3 py-0.5 rounded-full text-[11px] font-mono uppercase tracking-widest bg-blue-500/10 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-400/30">
               Financial Architect
             </span>
-            <span className="text-zinc-400 text-xs font-mono">• Real-Time Expense Calibration</span>
+            <span className="text-slate-500 dark:text-zinc-400 text-xs font-mono">• Real-Time Expense Calibration</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-white mt-2 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-slate-950 dark:text-white mt-2 tracking-tight">
             Budget Engine & Hotel Suggester
           </h2>
-          <p className="text-sm sm:text-base text-zinc-300 max-w-2xl mt-1">
+          <p className="text-sm sm:text-base text-slate-600 dark:text-zinc-300 max-w-2xl mt-1">
             Calibrate transport, beach huts, Kaveri river resorts, and coastal feasts with instant per-person and group totals.
           </p>
         </div>
